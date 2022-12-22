@@ -12,4 +12,4 @@ def exchange_url(originItem:ORIGNITEM):
         shorten_url = make_hashable_url(originItem.origin_url)
         insert_item_to_db(originItem.origin_url, shorten_url)
     
-    return {"shorten_url" : site_domain+shorten_url[:5]}
+    return {"shorten_url" : site_domain+shorten_url}
