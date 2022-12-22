@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.exchange import exchange_url
-from src.database import reverse_db
+from src.database import db
 from src.itemclass import ORIGNITEM
 import uvicorn
+from src.setconfig import check_config
 
 app = FastAPI()
 
@@ -22,14 +23,16 @@ app.add_middleware(
 
 @app.get('/{hashed_id}')
 async def link_to_site(hashed_id: str):
-    for item in reverse_db:
-        if item[:5] == hashed_id:
-            return {"origin_url" : reverse_db[item]}
-    return {"origin_url" : "error"}
+    shorten_id = db.link_in_db(hashed_id)
+    if shorten_id == None:
+        return {"origin_url" : "error"}
+    else:
+        return {"origin_url" : shorten_id}
 
 @app.post('/exchange')
 async def exchange(originItem:ORIGNITEM):
     return exchange_url(originItem)
 
 if __name__ == "__main__":
+    check_config()
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

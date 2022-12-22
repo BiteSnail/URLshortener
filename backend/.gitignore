@@ -1,0 +1,2 @@
+#don't track your config file because of security
+config.ini
