@@ -1,6 +1,6 @@
 @echo off
 
 echo web server open
-call forfastapi\Scripts\activate
 cd backend
+call forfastapi\Scripts\activate
 python main.py
