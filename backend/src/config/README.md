@@ -9,7 +9,8 @@ If you do not put it here, System make default config.
 > port = 27017   
 > database = test   
 > collection = urlitem   
-> 
+> maxSevSelDelay = 1
+>
 > [hash]   
 > map = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789   
 > max-id = 916132831   

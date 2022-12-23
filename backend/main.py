@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.setconfig import check_config
 check_config()
-from src.database import db
+from src.linktosite import link_to_site
 from src.exchange import exchange_url
 from src.itemclass import ORIGNITEM
 import uvicorn
@@ -23,16 +23,18 @@ app.add_middleware(
 )
 
 @app.get('/{hashed_id}')
-async def link_to_site(hashed_id: str):
-    shorten_id = db.link_in_db(hashed_id)
-    if shorten_id == None:
-        return {"origin_url" : "error"}
-    else:
-        return {"origin_url" : shorten_id}
+async def link(hashed_id: str):
+    return link_to_site(hashed_id)
 
-@app.post('/exchange')
+@app.post('/api/exchange')
 async def exchange(originItem:ORIGNITEM):
     return exchange_url(originItem)
+
+@app.post('/api/verify')
+async def verify(originItem:ORIGNITEM):
+    whitelist = ('http://', 'https://')
+    result = originItem.origin_url.startswith(whitelist)
+    return {"result":result}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

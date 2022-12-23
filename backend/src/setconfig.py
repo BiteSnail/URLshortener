@@ -12,6 +12,7 @@ def config_generation()-> configparser.ConfigParser:
     config['mongodb']['port'] = '27017'
     config['mongodb']['database'] = 'test'
     config['mongodb']['collection'] = 'urlitem'
+    config['mongodb']['maxSevSelDelay'] = '1'
 
     # make hash object
     config['hash'] = {}
