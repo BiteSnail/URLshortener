@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.exchange import exchange_url
+from src.setconfig import check_config
+check_config()
 from src.database import db
+from src.exchange import exchange_url
 from src.itemclass import ORIGNITEM
 import uvicorn
-from src.setconfig import check_config
 
 app = FastAPI()
 
@@ -34,5 +35,4 @@ async def exchange(originItem:ORIGNITEM):
     return exchange_url(originItem)
 
 if __name__ == "__main__":
-    check_config()
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

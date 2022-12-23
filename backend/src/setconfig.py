@@ -13,13 +13,19 @@ def config_generation()-> configparser.ConfigParser:
     config['mongodb']['database'] = 'test'
     config['mongodb']['collection'] = 'urlitem'
 
-    # additional object
+    # make hash object
     config['hash'] = {}
     config['hash']['map'] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     config['hash']['max-id'] = '916132831'
     config['hash']['padding-width'] = '2048'
     config['hash']['split-sep'] = '4'
     config['hash']['base-num'] = '62'
+
+    # make cache object
+    config['cache'] = {}
+    config['cache']['capacity'] = "100"
+    config['cache']['size'] = "0"
+    
     return config
 
 def check_config():
