@@ -4,19 +4,33 @@ import axios from "axios"
 export const MainPage = () => {
     const [realURL, setRealURL] = useState(0);
     const [shortened, setShortened] = useState(0);
+
     const isRightURL = (urlData) => {
-        //TODO : require auth for to urlData
-        return true;
+        return new Promise((resolve, reject)=>{
+            axios.post("http://localhost:8000/api/verify",{
+                origin_url: urlData
+            })
+            .then(function (response){
+                console.log(response.data.result)
+                resolve(response.data.result)
+            })
+            .catch(function (error){
+                reject(error)
+            })
+        })
     }
 
     const onClickButton = () => {
         console.log(realURL);
-        if (!isRightURL(realURL)){
-            return;
-        }
-        else{
-            axios
-                .post("http://localhost:8000/exchange",{
+        
+        isRightURL(realURL)
+        .then((isvalid)=>{
+            if (isvalid == false){
+                console.log('invalid url')
+            }
+            else{
+                axios
+                .post("http://localhost:8000/api/exchange",{
                     origin_url: realURL
                 })
                 .then(function (response) {
@@ -26,8 +40,11 @@ export const MainPage = () => {
                 .catch(function (error){
                     console.log(error, "error")
                 })
-        }
-        
+            }
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
     }
 
     return (
