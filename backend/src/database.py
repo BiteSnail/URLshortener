@@ -12,8 +12,8 @@ class DataBase:
                 "shorten": shorten}
         item_id = self.items.insert_one(item).inserted_id
 
-    def find_in_db(self, origin:str):
-        return self.items.find_one({"origin":origin})
+    def find_in_db(self, key:str, value:str):
+        return self.items.find_one({key:value})
 
     def link_in_db(self, shorten_id:str):
         return self.items.find_one({"shorten":shorten_id})['origin']
