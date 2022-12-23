@@ -34,7 +34,6 @@ async def exchange(originItem:ORIGNITEM):
 async def verify(originItem:ORIGNITEM):
     whitelist = ('http://', 'https://')
     result = originItem.origin_url.startswith(whitelist)
-    print(result)
     return {"result":result}
 
 if __name__ == "__main__":

@@ -11,7 +11,6 @@ export const MainPage = () => {
                 origin_url: urlData
             })
             .then(function (response){
-                console.log(response.data.result)
                 resolve(response.data.result)
             })
             .catch(function (error){
@@ -21,8 +20,6 @@ export const MainPage = () => {
     }
 
     const onClickButton = () => {
-        console.log(realURL);
-        
         isRightURL(realURL)
         .then((isvalid)=>{
             if (isvalid == false){
@@ -34,7 +31,6 @@ export const MainPage = () => {
                     origin_url: realURL
                 })
                 .then(function (response) {
-                    console.log(response.data.shorten_url, "shorten url")
                     setShortened(response.data.shorten_url);
                 })
                 .catch(function (error){
