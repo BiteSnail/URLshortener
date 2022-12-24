@@ -1,9 +1,11 @@
 import {useState} from "react"
 import axios from "axios"
+import "./MainPage.Module.scss"
 
 export const MainPage = () => {
-    const [realURL, setRealURL] = useState(0);
-    const [shortened, setShortened] = useState(0);
+    const [realURL, setRealURL] = useState("");
+    const [shortened, setShortened] = useState("");
+    const [itemname, setItemname] = useState("item1");
 
     const isRightURL = (urlData) => {
         return new Promise((resolve, reject)=>{
@@ -19,19 +21,37 @@ export const MainPage = () => {
         })
     }
 
+    const handleCopyClipBoard = async (text) => {
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('클립보드에 링크가 복사되었습니다.');
+        } catch (e) {
+          alert('복사에 실패하였습니다');
+        }
+    };
+
     const onClickButton = () => {
         isRightURL(realURL)
         .then((isvalid)=>{
-            if (isvalid == false){
+            if (isvalid === false){
+                setItemname("invaliditem")
+                setShortened("invlid url")
                 console.log('invalid url')
             }
             else{
+                setItemname("item1")
                 axios
                 .post("http://localhost:8000/api/exchange",{
                     origin_url: realURL
                 })
                 .then(function (response) {
-                    setShortened(response.data.shorten_url);
+                    try{
+                        setShortened(response.data.shorten_url);
+                        handleCopyClipBoard(response.data.shorten_url);
+                    } catch (e) {
+
+                    }
+                    navigator.clipboard.writeText(response.data.shorten_url)
                 })
                 .catch(function (error){
                     console.log(error, "error")
@@ -44,29 +64,32 @@ export const MainPage = () => {
     }
 
     return (
-        <div>
-            <header>
-                <h1>URL Shorter by BiteSnail</h1>
-            </header>
-            <nav>
+        <div className="main-body">
+            <div>
+                <header>
+                    <nav className="main-title">
+                        <a href="/" className="home-link">URL Shortener</a>
+                        <div>
 
-            </nav>
-            <article>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+            <div className="container">
                 <div>
-                    <h2> 너에게 주는 짧은 링크</h2>
-                    <p> 단축된 URL을 통해 바이러스를 뿌려보자.</p>
+                    <p>Enter a long URL to make shorten</p>
                 </div>
                 <div>
-                    <input type="text" onChange={(e)=>setRealURL(e.target.value)}></input>
-                    <button onClick={onClickButton}>URL 단축</button>
+                    <input id="realurl" className={itemname} type="text" onChange={(e)=>setRealURL(e.target.value)}></input>
                     <p>{shortened}</p>
+                    <button className="inbox1" onClick={onClickButton}>URL 단축</button>
                 </div>
-            </article>
+
+            </div>
             <footer>
                 <div>
-                    <h6>INFO</h6>
-                    <p>made by bitesnail</p>
-                    <p>email : rkwoal216@gmail.com</p>
+                    <h3>INFO</h3>
+                    <p>Email : rkwoal216@gmail.com</p>
                 </div>
             </footer>
         </div>
