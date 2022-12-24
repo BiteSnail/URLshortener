@@ -57,6 +57,8 @@ class DataBase:
         except pymongo.errors.ServerSelectionTimeoutError as err:
             print(err)
             return None
+        except TypeError as err:
+            return None
     
     def find_in_cache(self, shorten_id: str)-> dict | None:
         if shorten_id in self.cache:
