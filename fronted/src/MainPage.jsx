@@ -1,11 +1,20 @@
 import {useState} from "react"
 import axios from "axios"
 import "./MainPage.Module.scss"
+import Backdrop from "@mui/material/Backdrop";
 
 export const MainPage = () => {
     const [realURL, setRealURL] = useState("");
     const [shortened, setShortened] = useState("");
     const [itemname, setItemname] = useState("item1");
+    const [open, setOpen] = useState(false);
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const handleToggle = () => {
+      setOpen(!open);
+    };
 
     const isRightURL = (urlData) => {
         return new Promise((resolve, reject)=>{
@@ -30,6 +39,26 @@ export const MainPage = () => {
         }
     };
 
+    axios.interceptors.request.use(
+      function (config) {
+        handleToggle();
+        return config;
+      },
+      function (error) {
+        return Promise.reject(error);
+      }
+    )
+    
+    axios.interceptors.response.use(
+      function (response) {
+        handleClose();
+        return response;
+      },
+      function (error) {
+        return Promise.reject(error);
+      }
+    )
+    
     const onClickButton = () => {
         isRightURL(realURL)
         .then((isvalid)=>{
@@ -84,7 +113,11 @@ export const MainPage = () => {
                     <p>{shortened}</p>
                     <button className="inbox1" onClick={onClickButton}>URL 단축</button>
                 </div>
-
+                <Backdrop
+                  sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                  open={open}
+                  onClick={handleClose}
+                />
             </div>
             <footer>
                 <div>
